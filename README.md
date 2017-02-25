@@ -107,4 +107,4 @@ the position of the vehicle with respect to center is calcuated through function
 
 I implemented this step in lines # through # in my code in yet_another_file.py in the function map_lane(). Here is an example of my result on a test image:
 
-![alt img] (/out_images/Show_Lane_In_Image/0.jpg). For more image, please go to ![Here](/out_images/Show_lane_In_Image)
+![alt img] (/output_images/Show_Lane_In_Image/0.jpg). For more image, please go to ![Here](/output_images/Show_Lane_In_Image/)
