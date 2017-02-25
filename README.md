@@ -91,7 +91,6 @@ I verified that my perspective transform was working as expected by drawing the 
 
 I used the method called 'sliding_window' which was introduced in the course material to indentify the lane-line pixel. The function is included in ![process.py] (/Code/process.py)). Afer the lane points are avaiable, they are used to fit a second order of polynomial:
 
-    y_eval = np.array([0,out_img.shape[0]-1])
     left_fit = np.polyfit(lefty, leftx, 2) # polyfit coefficients of lane left edge
     right_fit = np.polyfit(righty, rightx, 2) # polyfit coefficients of lane right edge
     
