@@ -52,14 +52,9 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 ###Pipeline (single images)
 
 ####1. Provide an example of a distortion-corrected image.
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
+After obtaining the camera matrix from previous step, I then applied undistortion function  cv2.undistort to undistore the raw image. Here is an example of before and after image undistortion operation: 
 ![alt text](/output_images/Undistored_Image/0.jpg)
-![alt text](/output_images/Undistored_Image/1.jpg)
-![alt text](/output_images/Undistored_Image/2.jpg)
-![alt text](/output_images/Undistored_Image/3.jpg)
-![alt text](/output_images/Undistored_Image/4.jpg)
-![alt text](/output_images/Undistored_Image/5.jpg)
-![alt text](/output_images/Undistored_Image/6.jpg)
+For more samples, please go to /output_images/Undistored_Image to find.
 
 ####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
