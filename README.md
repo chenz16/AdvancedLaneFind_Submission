@@ -15,9 +15,25 @@ configuration.py - define basic input and output source/address of image process
 
 writeup_report - Explain what is included for the submission and how it is done. 
 
-### Output image folder
-bird_eye_view: sample image to compare original image and processed image 
+### output_images folder
+
+bird_eye_view: bird eye view (top to down) view of sample images 
+
 camera_cal_output: camera calibratioin matrix and sample undistorted image
+
+Feature_Selected_Image: images after features selected. The features include: s channel in HLS color space, gradient of image x, y direction, magnitude and direction of gradient 
+
+Poly_Fit: plot of polynomial fit of those points which are identified as lane points 
+
+Show_Lane_In_Image: overlay indentified lane in origal image (camera view) 
+
+Undistored_Image: undistored image for image samples
+
+### porject_video_DetLane.mp4
+
+Overlay identified lane in project video
+
+
 
 ## 2. Go through rubic score
 
