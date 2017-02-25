@@ -130,4 +130,17 @@ To isolate error detections, i added sanity check function(sanity_check in ![alt
 
 Sanity check function returns the True or False of left and right line detection effectiveness. 
 
-In pipe_line.py, I defines handling methods for different types of line detection errors. If both lines are faulted, keep previous lines; if one of lines are faulted, use another line plus a lane width shift. 
+In pipe_line.py, I defines handling methods for different types of line detection errors. If both lines are faulted, keep previous lines; if one of lines are faulted, use another line plus a lane width shift.  Here is the code extracted from pipe_line.py:
+
+        if (san_check_left & (not san_check_right)):
+            right_fit = 0*right_line.current_fit + 1*(left_fit + np.array([0, 0, fit_offset]))
+
+        elif (not san_check_left) and san_check_right:
+            left_fit = 0*left_line.current_fit + 1*(right_fit - np.array([0, 0, fit_offset]))
+
+        elif (not san_check_left) and (not san_check_right):
+            right_fit = right_line.current_fit
+            left_fit = left_line.current_fit
+        else:
+            pass
+
