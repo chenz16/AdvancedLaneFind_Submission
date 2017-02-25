@@ -76,12 +76,13 @@ Here's an example of my output for this step.  ![Alt image] (/output_images/Feat
 The code for my perspective transform includes a function called `perspective_trans` defined in ![process.py] (/Code/process.py).  The `perspective_trans` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points by my visual check of the straight line shown in the test images:
 
 This resulted in the following source and destination points:
+
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
-| 280, 675      | 280, 675        | 
-| 1040, 675     | 1040, 675      |
-| 909, 590     | 1040, 590      |
-| 390, 596      | 280, 590        |
+| 280, 675      | 280, 675      | 
+| 1040, 675     | 1040, 675     |
+| 909, 590      | 1040, 590      |
+| 390, 596      | 280, 590      |
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
