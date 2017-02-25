@@ -60,7 +60,7 @@ For more samples, please find through ![Here] (/output_images/Undistored_Image/)
 
 I used a combination of color and gradient thresholds to generate a binary image.
 
-For color selection (see function "hls_select" in ![process.py] (/Code/process.py) , I used the s channle of HLS color space by specifying threshould value thresh=(80, 255)  
+For color selection (see function 'hls_select' in ![process.py] (/Code/process.py) , I used the s channle of HLS color space by specifying threshould value thresh=(80, 255)  
 
 For gradient selection, I used the x, y direction gradient (see function "abs_sobel_thresh" in ![process.py] (/Code/process.py)  ), mangtitude of gradient (see "mag_thresh" in ![process.py] (/Code/process.py)  ), and direction of gradient (see function dir_threshold in ![process.py] (/Code/process.py) ).  Their threshold are shown as follows: 
 
@@ -83,13 +83,38 @@ This resulted in the following source and destination points:
 | 1040, 675     | 1040, 675     |
 | 909, 590      | 1040, 590      |
 | 390, 596      | 280, 590      |
-
-| Source        | Destination   | 
-|:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
-
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
+![Alt img](/out_images/transform/0.jpg)
 
+
+####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+
+I used the method called 'sliding_window' which was introduced in the course material to indentify the lane-line pixel. The function is included in ![process.py] (/Code/process.py)). Afer the lane points are avaiable, they are used to fit a second order of polynomial:
+
+    left_fit = np.polyfit(lefty, leftx, 2) # polyfit coefficients of lane left edge
+    right_fit = np.polyfit(righty, rightx, 2) # polyfit coefficients of lane right edge
+    
+An sample image of lane points indentification and polynominal fit is shown:
+![alt img] (output_images/Poly_Fit/0.jpg)
+
+
+####5 Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+
+The radius of curvature of the lane is calcuated through function 'curvarad' in ![process.py] (/Code/process.py).
+the position of the vehicle with respect to center is calcuated through function 'lane_center_offset' in ![process.py] (/Code/process.py). The assumpiton here is the camera is mounted in the center fron vehicle. The lane center is indentify along the middle of left and right line of a lane. 
+
+####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+
+I implemented this step in lines # through # in my code in yet_another_file.py in the function map_lane(). Here is an example of my result on a test image:
+
+![alt img] (/output_images/Show_Lane_In_Image/0.jpg). For more image, please go to ![Here](/output_images/Show_Lane_In_Image/)
+
+
+####6 Pipeline (video)
+Here's a link to my video result
+
+###Discussion
+
+Briefly discuss any problems / issues you faced in your implementation of this project. Where will your pipeline likely fail? What could you do to make it more robust?
+
+Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.
