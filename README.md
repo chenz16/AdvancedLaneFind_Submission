@@ -60,7 +60,7 @@ For more samples, please find through ![Here] (/output_images/Undistored_Image/)
 
 I used a combination of color and gradient thresholds to generate a binary image.
 
-For color selection (see function "hls_select" in ![process.py] (/Code/process.py) , I used the s channle of HLS color space by specifying threshould value thresh=(80, 255)  
+For color selection (see function 'hls_select' in ![process.py] (/Code/process.py) , I used the s channle of HLS color space by specifying threshould value thresh=(80, 255)  
 
 For gradient selection, I used the x, y direction gradient (see function "abs_sobel_thresh" in ![process.py] (/Code/process.py)  ), mangtitude of gradient (see "mag_thresh" in ![process.py] (/Code/process.py)  ), and direction of gradient (see function dir_threshold in ![process.py] (/Code/process.py) ).  Their threshold are shown as follows: 
 
@@ -83,13 +83,6 @@ This resulted in the following source and destination points:
 | 1040, 675     | 1040, 675     |
 | 909, 590      | 1040, 590      |
 | 390, 596      | 280, 590      |
-
-| Source        | Destination   | 
-|:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
-
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
+![Alt img](/out_images/transform/0.jpg)
 
