@@ -96,3 +96,15 @@ I used the method called 'sliding_window' which was introduced in the course mat
     
 An sample image of lane points indentification and polynominal fit is shown:
 ![alt img] (output_images/Poly_Fit/0.jpg)
+
+
+####5 Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+
+The radius of curvature of the lane is calcuated through function 'curvarad' in ![process.py] (/Code/process.py).
+the position of the vehicle with respect to center is calcuated through function 'lane_center_offset' in ![process.py] (/Code/process.py). The assumpiton here is the camera is mounted in the center fron vehicle. The lane center is indentify along the middle of left and right line of a lane. 
+
+####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+
+I implemented this step in lines # through # in my code in yet_another_file.py in the function map_lane(). Here is an example of my result on a test image:
+
+![alt img] (/out_images/Show_Lane_In_Image/0.jpg). For more image, please go to ![Here](/out_images/Show_lane_In_Image)
