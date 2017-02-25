@@ -54,7 +54,7 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 ####1. Provide an example of a distortion-corrected image.
 After obtaining the camera matrix from previous step, I then applied undistortion function  cv2.undistort to undistore the raw image. Here is an example of before and after image undistortion operation: 
 ![alt text](/output_images/Undistored_Image/0.jpg)
-For more samples, please go to /output_images/Undistored_Image to find.
+For more samples, please find through https://github.com/chenz16/AdvancedLaneFind_Submission/tree/master/output_images/Undistored_Image
 
 ####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
