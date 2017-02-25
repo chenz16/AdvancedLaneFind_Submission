@@ -86,3 +86,14 @@ This resulted in the following source and destination points:
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 ![Alt img](/out_images/transform/0.jpg)
 
+
+####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+
+I used the method called 'sliding_window' which was introduced in the course material to indentify the lane-line pixel. The function is included in ![process.py] (/Code/process.py)). Afer the lane points are avaiable, they are used to fit a second order of polynomial:
+
+    y_eval = np.array([0,out_img.shape[0]-1])
+    left_fit = np.polyfit(lefty, leftx, 2) # polyfit coefficients of lane left edge
+    right_fit = np.polyfit(righty, rightx, 2) # polyfit coefficients of lane right edge
+    
+An sample image of lane points indentification and polynominal fit is shown:
+![alt img] (/out_images/Poly_Fit/0.jpg)
