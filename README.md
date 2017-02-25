@@ -32,7 +32,7 @@ Undistorted_Image: undistorted image for image samples
 
 ### project_video_DetLane.mp4
 
-Overlay identified lane in project video
+project submission video which overlays identified lane with the original video
 
 
 
