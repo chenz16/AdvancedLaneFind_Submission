@@ -108,3 +108,13 @@ the position of the vehicle with respect to center is calcuated through function
 I implemented this step in lines # through # in my code in yet_another_file.py in the function map_lane(). Here is an example of my result on a test image:
 
 ![alt img] (/output_images/Show_Lane_In_Image/0.jpg). For more image, please go to ![Here](/output_images/Show_Lane_In_Image/)
+
+
+####6 Pipeline (video)
+Here's a link to my video result
+
+###Discussion
+
+Briefly discuss any problems / issues you faced in your implementation of this project. Where will your pipeline likely fail? What could you do to make it more robust?
+
+Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.
