@@ -119,13 +119,19 @@ Here's a link to my video result
 Briefly discuss any problems / issues you faced in your implementation of this project. Where will your pipeline likely fail? What could you do to make it more robust?
 
 The pipeline works well for most of images in the vedio except a few of them. There are several causes for the error detection
+
     1. background noise: a. uneven shadow area where the tree shadow to the ground is uneven and changes fast b. other noises which may be identified as lane points but actually not
+    
     2. insufficient or missing lane mark points which causes the polynomial fit incorrect
+    
     3. curvature change: this particularly is an issue for the challenge video where the curvature of lane changes dynamically
 
 To isolate error detections, i added sanity check function(sanity_check in ![alt txt] (/Code/process.py)) to check if the polynomial fit makes sense. Several criteria were considered:
+
     1. radius of curvature: compare the radius of recently indentified lane lines with the one in previous step. If it out of range, the sanity check return false, meaning the lane line detection is not effective/valid. 
-    2. Absolute radius of curvature: this is a little tricky. In general situation, we do not know what's the range of radius of curvature. For this submission, we pick a value which provides a good detection result with a visual check. 
+    
+    2. Absolute radius of curvature: this is a little tricky. In general situation, we do not know what's the range of radius of curvature. For this submission, we pick a value which provides a good detection result with a visual check.
+    
     3. compare the shift between the new identified lane lines with the lane center identified previously. The shift should be within a range. If not, the new identified lane is treated as invalid/ineffective.  
 
 Sanity check function returns the True or False of left and right line detection effectiveness. 
