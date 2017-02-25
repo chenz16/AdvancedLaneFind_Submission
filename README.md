@@ -60,9 +60,9 @@ For more samples, please find through ![Here] (/output_images/Undistored_Image/)
 
 I used a combination of color and gradient thresholds to generate a binary image.
 
-For color selection (see function hls_select in ![process.py] (/Code/process.py) , I used the s channle of HLS color space by specifying threshould value thresh=(80, 255)  
+For color selection (see function "hls_select" in ![process.py] (/Code/process.py) , I used the s channle of HLS color space by specifying threshould value thresh=(80, 255)  
 
-For gradient selection, I used the x, y direction gradient (see function abs_sobel_thresh in ![process.py] (/Code/process.py)  ), mangtitude of gradient (see mag_thresh in ![process.py] (/Code/process.py)  ), and direction of gradient (see function dir_threshold in ![process.py] (/Code/process.py) ).  Their threshold are shown as follows: 
+For gradient selection, I used the x, y direction gradient (see function "abs_sobel_thresh" in ![process.py] (/Code/process.py)  ), mangtitude of gradient (see "mag_thresh" in ![process.py] (/Code/process.py)  ), and direction of gradient (see function dir_threshold in ![process.py] (/Code/process.py) ).  Their threshold are shown as follows: 
 
     gradx = abs_sobel_thresh(image_color, orient='x', sobel_kernel=ksize, thresh=(50, 200))
     grady = abs_sobel_thresh(image_color, orient='y', sobel_kernel=ksize, thresh=(50, 200))
@@ -71,27 +71,17 @@ For gradient selection, I used the x, y direction gradient (see function abs_sob
 
 Here's an example of my output for this step.  ![Alt image] (/output_images/Feature_Selected_Image/0.jpg)
 
-
-![alt text][image3]
-
 ####3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+The code for my perspective transform includes a function called `perspective_trans` defined in ![process.py] (/Code/process.py).  The `perspective_trans` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points by my visual check of the straight line shown in the test images:
 
-```
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
-
-```
 This resulted in the following source and destination points:
+| Source        | Destination   | 
+|:-------------:|:-------------:| 
+| 280, 675      | 280, 675        | 
+| 1040, 675     | 1040, 675      |
+| 909, 590     | 1040, 590      |
+| 390, 596      | 280, 590        |
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
@@ -102,4 +92,3 @@ This resulted in the following source and destination points:
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
-![alt text][image4]
