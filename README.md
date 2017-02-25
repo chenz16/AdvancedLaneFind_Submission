@@ -96,4 +96,4 @@ I used the method called 'sliding_window' which was introduced in the course mat
     right_fit = np.polyfit(righty, rightx, 2) # polyfit coefficients of lane right edge
     
 An sample image of lane points indentification and polynominal fit is shown:
-![alt img] (/out_images/Poly_Fit/0.jpg)
+![alt img] (output_images/Poly_Fit/0.jpg)
