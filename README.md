@@ -85,6 +85,7 @@ This resulted in the following source and destination points:
 | 390, 596      | 280, 590      |
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
+
 ![Alt img](/out_images/transform/0.jpg)
 
 
@@ -150,3 +151,4 @@ In pipe_line.py ![alt txt] (/Code/pipe_line.py), I defines handling methods for 
         else:
             pass
 
+Eventhough i spent a lot of time to design and debug these robust strategy, in general, there is still lots of work needed to improve the strategy, which is out of the scope of this submission. 
