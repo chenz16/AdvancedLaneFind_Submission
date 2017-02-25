@@ -57,7 +57,20 @@ After obtaining the camera matrix from previous step, I then applied undistortio
 For more samples, please find through ![Here] (/output_images/Undistored_Image/)
 
 ####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+
+I used a combination of color and gradient thresholds to generate a binary image.
+
+For color selection (see function hls_select in ![process.py] (/Code/process.py) , I used the s channle of HLS color space by specifying threshould value thresh=(80, 255)  
+
+For gradient selection, I used the x, y direction gradient (see function abs_sobel_thresh in ![process.py] (/Code/process.py)  ), mangtitude of gradient (see mag_thresh in ![process.py] (/Code/process.py)  ), and direction of gradient (see function dir_threshold in ![process.py] (/Code/process.py) ).  Their threshold are shown as follows: 
+
+    gradx = abs_sobel_thresh(image_color, orient='x', sobel_kernel=ksize, thresh=(50, 200))
+    grady = abs_sobel_thresh(image_color, orient='y', sobel_kernel=ksize, thresh=(50, 200))
+    mag_binary = mag_thresh(image_color, sobel_kernel=ksize, mag_thresh=(100, 255))
+    dir_binary = dir_threshold(image_color, sobel_kernel=ksize, thresh=(0.7, 1.2))
+
+Here's an example of my output for this step.  ![Alt image] (/output_images/Feature_Selected_Image/0.jpg)
+
 
 ![alt text][image3]
 
