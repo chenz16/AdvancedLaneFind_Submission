@@ -62,6 +62,8 @@ I used a combination of color and gradient thresholds to generate a binary image
 
 For color selection (see function 'hls_select' in ![process.py] (/Code/process.py) , I used the s channel of HLS color space by specifying threshold value thresh=(80, 255)  
 
+    s_binary = hls_select(image_color, thresh=(80, 255))
+
 For gradient selection, I used the x, y direction gradient (see function "abs_sobel_thresh" in ![process.py] (/Code/process.py)  ), magnitude of gradient (see "mag_thresh" in ![process.py] (/Code/process.py)  ), and direction of gradient (see function dir_threshold in ![process.py] (/Code/process.py) ).  Their threshold are shown as follows: 
 
     gradx = abs_sobel_thresh(image_color, orient='x', sobel_kernel=ksize, thresh=(50, 200))
@@ -86,7 +88,7 @@ This resulted in the following source and destination points:
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
-![Alt img](/out_images/transform/6_TransPoint.jpg)
+![Alt img](/output_images/transform/6_TransPoint.jpg)
 
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
@@ -107,7 +109,16 @@ the position of the vehicle with respect to center is calcuated through function
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in yet_another_file.py in the function map_lane(). Here is an example of my result on a test image:
+I implemented image overlay by mapping the lane identified from bird eye view to the original image through inverse perspective transformation. I also added radius of curvature and distance of vehicle off to lane center into orginal image through text overlay. The function is read as:  
+
+    result = image_overlay(image_color, image_warped, left_fitx, right_fitx) # image_warped
+
+    # text overlay
+    result = txt_overlay(result, left_curverad, right_curverad,middle_curverad, vehicle_offcenter)
+    
+The functions of "image_overlay" and  "txt_overlay" can be found in ![alt txt] (/Code/process.py). 
+
+The following picture shows an example:
 
 ![alt img] (/output_images/Show_Lane_In_Image/0.jpg). For more image, please go to ![Here](/output_images/Show_Lane_In_Image/)
 
