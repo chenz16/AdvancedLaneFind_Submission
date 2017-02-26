@@ -164,4 +164,4 @@ In pipe_line.py ![alt txt] (/Code/pipe_line.py), I defines handling methods for 
         else:
             pass
 
-Even though i spent a lot of time to design and debug these robust strategy, in general, there is still lots of work needed to improve the strategy, which is out of the scope of this submission. 
+Even though i spent a lot of time to design and debug the strategy for robustness, in general, more work is needed to improve the detection quality, which is out of the scope of this submission. 
