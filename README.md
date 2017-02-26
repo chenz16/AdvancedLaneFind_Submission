@@ -126,7 +126,7 @@ For more image, please go to ![Here](/output_images/Show_Lane_In_Image/)
 
 
 #### 6 Pipeline (video)
-Here's a link to my video result
+Here's a link to my video result: ![link](/project_video_DetLane.mp4)
 
 ### Discussion
 
