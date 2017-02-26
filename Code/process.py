@@ -29,10 +29,6 @@ curvarad: return the turn radius of lanes  (curvature = 1/ turn_radius)
 
 '''
 
-
-
-
-
 import numpy as np
 import cv2
 import glob
@@ -142,8 +138,7 @@ def mask_image(img_binary):
     cv2.fillPoly(mask, vertices, ignore_mask_color)
     return mask
 
-def perspective_trans(img, trans_direction ='camera2birdeye',  src =[[280, 675], [1040, 675], [909,590], [390, 596]] ,
-                        dst  = [[280,675], [1040,675], [1040, 590], [280,590]]):
+def perspective_trans(img, trans_direction ='camera2birdeye',  src =cfg.Source['src'],dst  = cfg.Source['dst']):
     # peform perspective transformation
     # option for trans_direction: camera2birdeye, birdeye2camera
     src = np.float32(src)
@@ -291,6 +286,16 @@ def image_overlay(image_color, binary_warped, left_fitx, right_fitx):
 
     return result
 
+def trans_overlay(image_color, image_trans, src =cfg.Source['src'], dst  = cfg.Source['dst']):
+    # visualize the source and target points for perspective transform
+    vertice_source =np.expand_dims(np.array(src), axis=0)
+    vertice_target =np.expand_dims(np.array(dst), axis=0)
+    cv2.polylines(image_color, vertice_source, 1, (255, 0, 0), 3)
+    cv2.polylines(image_trans, vertice_target, 1, (255, 0, 0),3)
+    #cv2.fillPoly(image_color, np.int32(vertice_source),0, (255,255,255))
+    #cv2.fillPoly(image_trans, vertice_target, 0, (255,255,255))
+
+    return image_color, image_trans
 
 def txt_overlay(result, left_curverad, right_curverad, middle_curverad, vehicle_offcenter):
     # overlay txt messagine in image
@@ -308,9 +313,9 @@ def txt_overlay(result, left_curverad, right_curverad, middle_curverad, vehicle_
 
 
     if vehicle_offcenter >=0:
-        txt = 'vehicle is ' + '{0:.2f}'.format(vehicle_offcenter) + 'm' + ' right of center'
+        txt = 'vehicle is ' + '{0:.2f}'.format(vehicle_offcenter) + 'm' + ' left of center'
     else:
-        txt = 'vehicle is ' + '{0:.2f}'.format(np.absolute(vehicle_offcenter)) + 'm' + ' left of center'
+        txt = 'vehicle is ' + '{0:.2f}'.format(np.absolute(vehicle_offcenter)) + 'm' + ' right of center'
 
     cv2.putText(result,txt,(50, 110), font, 1,(255,255,255),2)
 
@@ -356,31 +361,37 @@ def sanity_check(left_fit, right_fit, left_fit_last, right_fit_last, left_xfitpo
     # checking criteria:curvarad change ration within a range; numer of fit points biggger than a threshold
     y_eval = np.array([y0, yf])
     left_curverad,right_curverad, middle_curverad = curvarad(left_fit, right_fit, y_eval, ym_per_pix = ym_per_pix, xm_per_pix = xm_per_pix)
-    curvarad_curret = np.array([left_curverad, right_curverad]).T
+    curvarad_current = np.array([left_curverad, right_curverad]).T
 
     left_curverad_last,right_curverad_last, middle_curverad_last = curvarad(left_fit_last,
     right_fit_last, y_eval, ym_per_pix = 30/720, xm_per_pix = 3.7/700)
     # get reference curvarad of last images
     curvarad_lastdet = np.array([left_curverad_last, right_curverad_last]).T
-    curvarad_change = np.divide(curvarad_curret, curvarad_lastdet)
-    curvarad_check = (curvarad_change <10) & (curvarad_change > 0.1) & (curvarad_curret > 150)
-    curvarad_check_left = curvarad_check[0,0] & curvarad_check[1,0]  #& (left_xfitpoint > 100)
-    curvarad_check_right = curvarad_check[1,0] & curvarad_check[1,1] #& (right_xfitpoint > 100)
+    curvarad_change = np.divide(curvarad_current, curvarad_lastdet)
+    # check curvarad
+    curvarad_check = (curvarad_change <10) & (curvarad_change > 0.1) & (curvarad_current > 350)
+    san_check_left = curvarad_check[0,0] & curvarad_check[1,0]  #& (left_xfitpoint > 100)
+    san_check_right = curvarad_check[1,0] & curvarad_check[1,1] #& (right_xfitpoint > 100)
 
-    middle_pix_last = (left_fit_last + right_fit_last)/2
-    left_delta= middle_pix_last[-1] - left_fit[-1]
-    right_delta= right_fit[-1] - middle_pix_last[-1]
-    curvarad_check_left = curvarad_check_left & (left_delta*xm_per_pix>3.8/2*0.7)
-    curvarad_check_right = curvarad_check_right & (right_delta*xm_per_pix> 3.8/2*0.7)
+    # check new line offset to the lane center identified from last image
+    middle_pix_last = (x_eval(left_fit_last, y_eval) + x_eval(right_fit_last, y_eval))/2
+    left_fitx = x_eval(left_fit, y_eval)
+    right_fitx = x_eval(right_fit, y_eval)
 
+    left_delta = middle_pix_last - left_fitx
+    right_delta = right_fitx - middle_pix_last
+    left_delta_check = (left_delta > 3.8/2*0.7/xm_per_pix) & (left_delta < 3.8/2*1.3/xm_per_pix)
+    right_delta_check = (right_delta > 3.8/2*0.7/xm_per_pix) & (right_delta < 3.8/2*1.3/xm_per_pix)
 
-    #left_fitx = left_fit[0]*y_eval**2 + left_fit[1]*y_eval + left_fit[2]
-    #left_fitx = right[0]*y_eval**2 + right_fit[1]*y_eval + right_fit[2]
+    san_check_left = san_check_left & left_delta_check[0] & left_delta_check[1]
+    san_check_right = san_check_right & right_delta_check[0] & right_delta_check[1]
 
+    return san_check_left, san_check_right
 
-    return curvarad_check_left, curvarad_check_right
+def x_eval(polyfit, y_eval):
 
-
+    x_eval = polyfit[0]*y_eval**2 + polyfit[1]*y_eval + polyfit[2]
+    return x_eval
 
 
 '''

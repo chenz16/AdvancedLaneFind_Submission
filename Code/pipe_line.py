@@ -15,7 +15,7 @@ import configure as cfg
 from process import camera_cal, abs_sobel_thresh, mag_thresh, dir_threshold, mask_image
 from process import hls_select, perspective_trans, sliding_window, curvarad
 from process import lane_center_offset, image_overlay, txt_overlay
-from process import Line, sanity_check, margin_search
+from process import Line, sanity_check, margin_search, x_eval
 
 test_pic = cfg.Source['test_images'] # folder storing test images
 images = glob.glob(test_pic + '*.jpg')
@@ -55,56 +55,43 @@ def process_image(img):
 
     #search lane points based on sliding widows
     leftx, lefty, rightx, righty, left_lane_inds, right_lane_inds, out_img = sliding_window(image_warped)
-    '''
-    if (not left_line.detected) and (not right_line.detected):
-        # search lane points based on sliding widows
-        leftx, lefty, rightx, righty, left_lane_inds, right_lane_inds, out_img = sliding_window(image_warped)
-    else:
-        left_fit = left_line.current_fit
-        right_fit = right_line.current_fit
-        # search lane points based on sliding widows
-        leftx, lefty, rightx, righty, left_lane_inds, right_lane_inds = margin_search(image_warped, left_fit, right_fit)
-    '''
+
     # Fit a second order polynomial to each
     y_eval = np.array([0,out_img.shape[0]-1])
     left_fit = np.polyfit(lefty, leftx, 2) # polyfit coefficients of lane left edge
     right_fit = np.polyfit(righty, rightx, 2) # polyfit coefficients of lane right edge
 
-    # perform sanity check
-
     if left_line.detected or right_line.detected:
-        filter_coeff = 0.1
+        # filter the coefficient of polynomial fit
+        filter_coeff = 0.2
         left_fit = filter_coeff*left_line.current_fit + (1-filter_coeff)*left_fit
         right_fit = filter_coeff*right_line.current_fit + (1-filter_coeff)*right_fit
 
-    if left_line.detected or right_line.detected:
 
         # perform sanity check based on curvrad of current image and last image
-        curvarad_check_left, curvarad_check_right = sanity_check(left_fit, right_fit,left_line.current_fit, right_line.current_fit, leftx.shape[0], rightx.shape[0],
+        san_check_left, san_check_right = sanity_check(left_fit, right_fit,left_line.current_fit, right_line.current_fit, leftx.shape[0], rightx.shape[0],
                                                     y0 = 0, yf = 719, ym_per_pix = 30/720, xm_per_pix = 3.7/700)
+        # lane width- fit_offset
+        fit_offset_eval = np.absolute (x_eval(left_line.current_fit, y_eval) - x_eval(right_line.current_fit, y_eval))
+        fit_offset     = np.mean(fit_offset_eval)
 
-
-        # determin how to update the lane line based on sanity check result
-        if (curvarad_check_left & (not curvarad_check_right)):
+        # determin how to update the lane line based on sanity check results
+        if (san_check_left & (not san_check_right)):
             # if right line is not detected, right line is defined as left line + lane width
             #print('right_false detected')
-            fit_offset = np.absolute (right_line.current_fit[-1] -left_line.current_fit[-1])
             right_fit = 0*right_line.current_fit + 1*(left_fit + np.array([0, 0, fit_offset]))
             #print('right_false detected')
 
-        elif (not curvarad_check_left) and curvarad_check_right:
+        elif (not san_check_left) and san_check_right:
             #print('left_false detected')
-            fit_offset = np.absolute (right_line.current_fit[-1] -left_line.current_fit[-1])
             left_fit = 0*left_line.current_fit + 1*(right_fit - np.array([0, 0, fit_offset]))
 
-        elif (not curvarad_check_left) and (not curvarad_check_right):
+        elif (not san_check_left) and (not san_check_right):
             #print('fit coeff keeps')
             right_fit = right_line.current_fit
             left_fit = left_line.current_fit
         else:
             pass
-
-
 
     # update curvarad based on poly fit
     left_curverad, right_curverad, middle_curverad=curvarad(left_fit, right_fit, y_eval,ym_per_pix =30/720,xm_per_pix =3.7/700)
@@ -117,8 +104,8 @@ def process_image(img):
     ploty = np.linspace(0, out_img.shape[0]-1, out_img.shape[0] )
 
     # x pixle value of left curve and right curve
-    left_fitx = left_fit[0]*ploty**2 + left_fit[1]*ploty + left_fit[2]
-    right_fitx = right_fit[0]*ploty**2 + right_fit[1]*ploty + right_fit[2]
+    left_fitx = x_eval(left_fit, ploty)
+    right_fitx = x_eval(right_fit, ploty)
 
     pix_hor = image_warped.shape[1]
 
@@ -134,32 +121,8 @@ def process_image(img):
     return result
 
 
-
-# image test
-'''
-filename = '../project_video.mp4'
-vid = imageio.get_reader(filename,  'ffmpeg')
-nums = np.arange(985, 1045)
-for num in nums:
-    image = vid.get_data(num)
-    result = process_image(image)
-    fig = pylab.figure()
-    fig.suptitle('image #{}'.format(num), fontsize=20)
-    pylab.imshow(result)
-    #plt.pause(1)
-    #pylab.show()
-    fig.savefig('../vedio_sample/' + str(num) + '.jpg')
-'''
-
 output = '../project_video_DetLane.mp4'
 clip = VideoFileClip('../project_video.mp4')
 
 LaneDet = clip.fl_image(process_image)
 LaneDet.write_videofile(output, audio=False)
-
-'''
-output = '../harder_challenge_DetLane.mp4'
-clip = VideoFileClip('../harder_challenge_video.mp4')
-LaneDet = clip.fl_image(process_image)
-LaneDet.write_videofile(output, audio=False)
-'''

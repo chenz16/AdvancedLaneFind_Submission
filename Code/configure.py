@@ -13,6 +13,9 @@ Source['chessboard'] = '../camera_cal/' # folder to store chess board images
 Source['undist_sampe'] = '../camera_cal/' # undistort sample image in this folder to show how camera cal works
 Source['image_size'] = (9, 6) # (nx, ny) # chess board nx, ny
 Source['test_images'] = '../test_images/' # test images for lane finding
+Source['src'] = [[280, 675], [1040, 675], [909,590], [390, 596]]
+Source['dst'] = [[280,675], [1040,675], [1040, 590], [280,590]]
+
 
 Target = {}
 Target['chessboard_draw'] = '../camera_cal/Drawed)' # place to store the undistored chess board images

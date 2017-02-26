@@ -11,7 +11,7 @@ import configure as cfg
 from process import camera_cal, abs_sobel_thresh, mag_thresh, dir_threshold, mask_image
 from process import hls_select, perspective_trans, sliding_window, curvarad
 from process import lane_center_offset, image_overlay, txt_overlay
-from process import Line, sanity_check, margin_search
+from process import Line, sanity_check, margin_search, trans_overlay
 
 test_pic = cfg.Source['test_images'] # folder storing test images
 images = glob.glob(test_pic + '*.jpg')
@@ -46,6 +46,7 @@ for idx, fname in enumerate(images):
     #mask = mask_image(combined) # optional
     # change to bird eye view by performing perspective transform
     image_warped =  perspective_trans(combined, trans_direction ='camera2birdeye')
+
     # get histogram of y for each grid of x
     histogram = np.sum(image_warped[image_warped.shape[0]/2:,:], axis=0)
     out_img = np.dstack((image_warped*100, image_warped*255, image_warped*255))
@@ -62,55 +63,15 @@ for idx, fname in enumerate(images):
 
     # search lane points based on sliding widows
     leftx, lefty, rightx, righty, left_lane_inds, right_lane_inds, out_img = sliding_window(image_warped)
-    '''
-    if left_line.detected == False and right_line.detected == False:
-        # search lane points based on sliding widows
-        leftx, lefty, rightx, righty, left_lane_inds, right_lane_inds, out_img = sliding_window(image_warped)
-    else:
-        left_fit = left_line.current_fit
-        right_fit = right_line.current_fit
-        # search lane points based on sliding widows
-        leftx, lefty, rightx, righty, left_lane_inds, right_lane_inds = margin_search(image_warped, left_fit, right_fit)
-    '''
+
     # Fit a second order polynomial to each
     y_eval = np.array([0,out_img.shape[0]-1])
     left_fit = np.polyfit(lefty, leftx, 2) # polyfit coefficients of lane left edge
     right_fit = np.polyfit(righty, rightx, 2) # polyfit coefficients of lane right edge
 
-    # perform sanity check
-    Detected = True # assume two lines of a lane is detected
-    if left_line.detected == True or right_line.detected == True:
-
-        left_curv_lastdet = [left_line.radius_of_curvature_0, left_line.radius_of_curvature_yf]
-        right_curv_lastdet = [right_line.radius_of_curvature_0, right_line.radius_of_curvature_yf]
-        # get reference curvarad of last images
-        curvarad_lastdet = np.array([left_curv_lastdet, right_curv_lastdet]).T
-
-        # perform sanity check based on curvrad of current image and last image
-        curvarad_check_left, curvarad_check_right = sanity_check(left_fit, right_fit,curvarad_lastdet,
-                                                    y0 = 0, yf = 719, ym_per_pix = 30/720, xm_per_pix = 3.7/700)
-
-        # determin how to update the lane line based on sanity check result
-        if curvarad_check_left==True and curvarad_check_left==False:
-        # if right line is not detected, gadually adpat to left line + lane width
-            right_fit = 0.95*right.line.current_fit + 0.05*(left_fit + right.line.current_fit[-1] -left.line.current_fit[-1])
-
-        elif curvarad_check_left == False and curvarad_check_left == True:
-            left_fit = 0.95*left.line.current_fit + 0.05*(right_fit + left.line.current_fit[-1] -right.line.current_fit[-1])
-
-        elif curvarad_check_left == False and curvarad_check_left == False:
-            right_fit = right_line.current_fit
-            left_fit = left_line.current_fit
-            Detected = False # lane detection failed
-        else:
-            pass
-
     # update curvarad based on poly fit
     left_curverad, right_curverad, middle_curverad=curvarad(left_fit, right_fit, y_eval,ym_per_pix =30/720,xm_per_pix =3.7/700)
 
-    # update information of lane detection
-    left_line.update(Detected, left_fit, left_curverad[0], left_curverad[-1])
-    right_line.update(Detected, right_fit, right_curverad[0], right_curverad[-1])
 
     # Now our radius of curvature is in meters
     # visualize
@@ -123,7 +84,14 @@ for idx, fname in enumerate(images):
     vehicle_offcenter = lane_center_offset(left_fitx, right_fitx, pix_hor, ym_per_pix = 30/720, xm_per_pix = 3.7/700)
 
     result = image_overlay(image_color, image_warped, left_fitx, right_fitx) # image_warped
+
+
     result = txt_overlay(result, left_curverad, right_curverad, middle_curverad, vehicle_offcenter)
 
     vs.visualize_and_save(image_color, result, save_indx = idx, base_title = 'Undistored Image',
                         new_title = 'Detected Lane', save_folder = cfg.Target['output_images'] + 'Show_Lane_In_Image/' )
+
+    image_warped = perspective_trans(image_color, trans_direction ='camera2birdeye')
+    img_src_filled, img_trg_filled= trans_overlay(image_color, image_warped) # image_warped
+    vs.visualize_and_save(img_src_filled, img_trg_filled, save_indx = idx, base_title = 'Image with Source Points',
+        new_title = 'Warped Image with dst Points', save_folder = '../output_images/transform2/')
