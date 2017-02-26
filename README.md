@@ -12,7 +12,7 @@ process.py -  Defines the core functions to process images for lane finding
 
 visualize_save.py - visualize and save image
 
-configuration.py - define basic input and output source/address of image process. It also include the definition of perspective transformation source and destination points. 
+configuration.py - define basic input and output source/address of image process. It also includes the definition of perspective transformation source and destination points. 
 
 writeup_report - Explain what is included for the submission and how it is done. 
 
