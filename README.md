@@ -10,9 +10,9 @@ pipe_line.py -  pipe line to process video for lane finding
 
 process.py -  Defines the core functions to process images for lane finding
 
-visualize_save.py - visualize and save image
+visualization_save.py - visualize and save image
 
-configuration.py - define basic input and output source/address of image process. It also includes the definition of perspective transformation source and destination points. 
+configure.py- define basic input and output source/address of image process. It also includes the definition of perspective transformation source and destination points. 
 
 writeup_report - Explain what is included for the submission and how it is done. 
 
@@ -41,7 +41,7 @@ project submission video which overlays identified lane with the original video
 
 #### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
-The code for this step is contained in the function of camera_cal() in the ../Code/process.py  
+The code for this step is contained in the function of camera_cal() in the ![alt txt] (/Code/process.py)  
 
 I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the camera_cal folder. Assume each chessboard is in a flat plane therefore z is set as 0. Then the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
@@ -118,7 +118,7 @@ I implemented image overlay by mapping the lane identified from bird eye view to
     
 The functions of "image_overlay" and  "txt_overlay" can be found in ![alt txt] (/Code/process.py). 
 
-The following picture shows an example:
+Here is an example:
 
 ![alt img] (/output_images/Show_Lane_In_Image/0.jpg). For more image, please go to ![Here](/output_images/Show_Lane_In_Image/)
 
@@ -138,9 +138,9 @@ The pipeline works well for most of images in the vedio except a few of them. Th
     
     3. curvature change: this particularly is an issue for the challenge video where the curvature of lane changes dynamically
 
-To isolate error detections, i added sanity check function (plese refer to the sanity_check in ![alt txt] (/Code/process.py)) to check if the polynomial fit makes sense. Several criteria were considered:
+To isolate error detections, i added sanity check function (please refer to the sanity_check in ![alt txt] (/Code/process.py)) to check if the polynomial fit makes sense. Several criteria were considered:
 
-    1. radius of curvature: compare the radius of recently indentified lane lines with the one in previous step. If it out of range, the sanity check return false, meaning the lane line detection is not effective/valid. 
+    1. radius of curvature: compare the radius of recently identified lane lines with the one in previous step. If it out of range, the sanity check return false, meaning the lane line detection is not effective/valid. 
     
     2. Absolute radius of curvature: this is a little tricky. In general situation, we do not know what's the range of radius of curvature. For this submission, I pick a value which provides a good detection result through visual check.
     
@@ -162,4 +162,4 @@ In pipe_line.py ![alt txt] (/Code/pipe_line.py), I defines handling methods for 
         else:
             pass
 
-Eventhough i spent a lot of time to design and debug these robust strategy, in general, there is still lots of work needed to improve the strategy, which is out of the scope of this submission. 
+Even though i spent a lot of time to design and debug these robust strategy, in general, there is still lots of work needed to improve the strategy, which is out of the scope of this submission. 
