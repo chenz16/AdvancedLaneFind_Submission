@@ -120,7 +120,9 @@ The functions of "image_overlay" and  "txt_overlay" can be found in ![alt txt] (
 
 Here is an example:
 
-![alt img] (/output_images/Show_Lane_In_Image/0.jpg). For more image, please go to ![Here](/output_images/Show_Lane_In_Image/)
+![alt img] (/output_images/Show_Lane_In_Image/0.jpg)
+
+For more image, please go to ![Here](/output_images/Show_Lane_In_Image/)
 
 
 #### 6 Pipeline (video)
