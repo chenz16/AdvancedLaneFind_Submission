@@ -134,9 +134,9 @@ Briefly discuss any problems / issues you faced in your implementation of this p
 
 The pipeline works well for most of images in the vedio except a few of them. There are several causes for the error detection
 
-    1. background noise: a. uneven shadow area where the tree shadow to the ground is uneven and changes fast b. other noises which may be identified as lane points but actually not
+    1. background noises: a. uneven shadow area where the tree shadow to the ground is uneven and changes dynamically b. other noises which may be identified as lane points but actually they do not belong to.
     
-    2. insufficient or missing lane mark points which causes the polynomial fit incorrect
+    2. insufficient or missing lane points which causes the polynomial fit incorrect
     
     3. curvature change: this particularly is an issue for the challenge video where the curvature of lane changes dynamically
 
